@@ -2,8 +2,8 @@
 
 ## Features
 
-Start tracing in running tsserver instance.
-This is useful for debugging performance issue of editing experience.
+Take a trace of the TypeScript server instance used by vscode, **without restarting it**.
+It is useful for debugging performance issue of editing experience.
 
 Available commands are:
 
@@ -29,5 +29,6 @@ Initial release
 ## TODO
 
 - Some nice UI to show profiling is in progress.
-- Automatically open perfetto. This requires http server.
+- Automatically open [perfetto](https://ui.perfetto.dev/). This requires http server.
 - Fill trace.json with type information retrieved from types.json .
+- Instant trace does not show up in non-legacy perfetto UI. Convert it somehow.
