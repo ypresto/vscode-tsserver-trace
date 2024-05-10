@@ -1,26 +1,126 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
+import fs from 'fs/promises';
 
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
-export function activate(context: vscode.ExtensionContext) {
+const tmpPrefix = '/tmp/tsserver-tracer-plugin-';
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "vscode-typescript-profiler" is now active!');
+let api: any = undefined;
+let traceDir: string | undefined = undefined;
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('vscode-typescript-profiler.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from vscode-typescript-profiler!');
-	});
+export async function activate(context: vscode.ExtensionContext) {
+  // Get the TS extension
+  const tsExtension = vscode.extensions.getExtension('vscode.typescript-language-features');
+  if (!tsExtension) {
+    return;
+  }
 
-	context.subscriptions.push(disposable);
+  await tsExtension.activate();
+
+  // Get the API from the TS extension
+  if (!tsExtension.exports || !tsExtension.exports.getAPI) {
+    return;
+  }
+
+  let api = tsExtension.exports.getAPI(0);
+  if (!api) {
+    return;
+  }
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand('vscode-typescript-profiler.startTracing', async () => {
+      if (traceDir) {
+        vscode.window.showInformationMessage('Trace already started');
+        return;
+      }
+
+      const result = await vscode.window.withProgress(
+        {
+          title: 'Start tracing',
+          location: vscode.ProgressLocation.Notification,
+        },
+        async () => {
+          traceDir = await fs.mkdtemp(tmpPrefix);
+
+          api.configurePlugin('tsserver-tracer-plugin', { traceDir });
+
+          return await waitFor(
+            () =>
+              fs
+                .access(`${traceDir}/.tsserver-tracer-plugin.lock`)
+                .then(() => true)
+                .catch(() => false),
+            10000
+          );
+        }
+      );
+
+      if (result) {
+        vscode.window.showInformationMessage('Trace started');
+      } else {
+        vscode.window.showInformationMessage('Failed to start tracing');
+      }
+    })
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand('vscode-typescript-profiler.stopTracing', async () => {
+      if (!traceDir) {
+        vscode.window.showInformationMessage('Trace not started');
+      }
+
+      const result = await vscode.window.withProgress(
+        {
+          title: 'Stop tracing',
+          location: vscode.ProgressLocation.Notification,
+        },
+        async () => {
+          api.configurePlugin('tsserver-tracer-plugin', { traceDir: undefined });
+
+          return await waitFor(
+            () =>
+              fs
+                .access(`${traceDir}/.tsserver-tracer-plugin.lock`)
+                .then(() => false)
+                .catch(() => true),
+            20000
+          );
+        }
+      );
+
+      if (result) {
+        vscode.window.showInformationMessage('Trace stopped');
+        const { default: open } = await import('open');
+        open(traceDir!);
+        traceDir = undefined;
+      } else {
+        vscode.window.showInformationMessage('Failed to stop tracing');
+      }
+    })
+  );
 }
 
-// This method is called when your extension is deactivated
-export function deactivate() {}
+export function deactivate() {
+  if (traceDir) {
+    api?.configurePlugin('tsserver-tracer-plugin', { traceDir: undefined });
+  }
+}
+
+function waitFor(check: () => Promise<boolean>, timeout: number): Promise<boolean> {
+  const startTime = Date.now();
+  return new Promise((resolve) => {
+    const run = () => {
+      check().then((result) => {
+        if (result) {
+          resolve(true);
+          return;
+        }
+        if (Date.now() - startTime > timeout) {
+          resolve(false);
+          return;
+        }
+
+        setTimeout(run, 100);
+      });
+    };
+    run();
+  });
+}

@@ -1,0 +1,16 @@
+{
+  "name": "tsserver-tracer-plugin",
+  "private": true,
+  "version": "0.0.0",
+  "description": "",
+  "main": "./out",
+  "scripts": {
+    "build": "tsc -p ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "typescript": "^5.4.5"
+  }
+}

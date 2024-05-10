@@ -14,13 +14,23 @@
   "contributes": {
     "commands": [
       {
-        "command": "vscode-typescript-profiler.helloWorld",
-        "title": "Hello World"
+        "command": "vscode-typescript-profiler.startTracing",
+        "title": "TypeScript: Start tracing in tsserver"
+      },
+      {
+        "command": "vscode-typescript-profiler.stopTracing",
+        "title": "TypeScript: Stop tracing in tsserver"
+      }
+    ],
+    "typescriptServerPlugins": [
+      {
+        "name": "tsserver-tracer-plugin",
+        "enableForWorkspaceTypeScriptVersions": true
       }
     ]
   },
   "scripts": {
-    "vscode:prepublish": "pnpm run compile",
+    "vscode:prepublish": "pnpm run compile && cd plugin && pnpm run build",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "pretest": "pnpm run compile && pnpm run lint",
@@ -28,14 +38,18 @@
     "test": "vscode-test"
   },
   "devDependencies": {
-    "@types/vscode": "^1.88.0",
     "@types/mocha": "^10.0.6",
     "@types/node": "18.x",
+    "@types/vscode": "^1.88.0",
     "@typescript-eslint/eslint-plugin": "^7.4.0",
     "@typescript-eslint/parser": "^7.4.0",
-    "eslint": "^8.57.0",
-    "typescript": "^5.3.3",
     "@vscode/test-cli": "^0.0.8",
-    "@vscode/test-electron": "^2.3.9"
+    "@vscode/test-electron": "^2.3.9",
+    "eslint": "^8.57.0",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "open": "^10.1.0",
+    "tsserver-tracer-plugin": "link:plugin"
   }
 }
