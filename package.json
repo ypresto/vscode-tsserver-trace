@@ -30,10 +30,10 @@
     ]
   },
   "scripts": {
-    "vscode:prepublish": "pnpm run compile && cd plugin && pnpm run build",
+    "vscode:prepublish": "npm run compile && cd plugin && npm run build",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
-    "pretest": "pnpm run compile && pnpm run lint",
+    "pretest": "npm run compile && npm run lint",
     "lint": "eslint src --ext ts",
     "test": "vscode-test"
   },
@@ -50,6 +50,6 @@
   },
   "dependencies": {
     "open": "^10.1.0",
-    "tsserver-tracer-plugin": "link:plugin"
+    "tsserver-tracer-plugin": "file:plugin"
   }
 }
