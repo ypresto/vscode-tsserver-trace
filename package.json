@@ -1,7 +1,7 @@
 {
-  "name": "vscode-typescript-profiler",
-  "displayName": "vscode-typescript-profiler",
-  "description": "Take a trace of the typescript compiler from the editor.",
+  "name": "vscode-tsserver-tracer",
+  "displayName": "tsserver tracer",
+  "description": "Take a trace of the TypeScript server without restarting it.",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.88.0"
@@ -14,11 +14,11 @@
   "contributes": {
     "commands": [
       {
-        "command": "vscode-typescript-profiler.startTracing",
+        "command": "vscode-tsserver-tracer.startTracing",
         "title": "TypeScript: Start tracing in tsserver"
       },
       {
-        "command": "vscode-typescript-profiler.stopTracing",
+        "command": "vscode-tsserver-tracer.stopTracing",
         "title": "TypeScript: Stop tracing in tsserver"
       }
     ],

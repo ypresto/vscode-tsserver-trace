@@ -26,7 +26,7 @@ export async function activate(context: vscode.ExtensionContext) {
   }
 
   context.subscriptions.push(
-    vscode.commands.registerCommand('vscode-typescript-profiler.startTracing', async () => {
+    vscode.commands.registerCommand('vscode-tsserver-tracer.startTracing', async () => {
       if (traceDir) {
         vscode.window.showInformationMessage('Trace already started');
         return;
@@ -62,7 +62,7 @@ export async function activate(context: vscode.ExtensionContext) {
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand('vscode-typescript-profiler.stopTracing', async () => {
+    vscode.commands.registerCommand('vscode-tsserver-tracer.stopTracing', async () => {
       if (!traceDir) {
         vscode.window.showInformationMessage('Trace not started');
       }

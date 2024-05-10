@@ -1,4 +1,4 @@
-# vscode-typescript-profiler README
+# vscode-tsserver-tracer README
 
 ## Features
 
