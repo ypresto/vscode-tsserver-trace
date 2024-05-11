@@ -4,6 +4,10 @@
   "description": "Take a trace of the TypeScript server without restarting it.",
   "version": "0.0.1",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ypresto/vscode-tsserver-tracer.git"
+  },
   "engines": {
     "vscode": "^1.88.0"
   },
@@ -32,7 +36,7 @@
   },
   "scripts": {
     "vscode:prepublish": "npm run compile && cd plugin && npm run build",
-    "compile": "tsc -p ./",
+    "compile": "node scripts/bundle-esm.js && tsc -p ./",
     "watch": "tsc -watch -p ./",
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src --ext ts",
@@ -46,11 +50,13 @@
     "@typescript-eslint/parser": "^7.4.0",
     "@vscode/test-cli": "^0.0.8",
     "@vscode/test-electron": "^2.3.9",
+    "esbuild": "^0.21.1",
+    "esbuild-node-externals": "^1.13.1",
     "eslint": "^8.57.0",
+    "open": "^10.1.0",
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "open": "^10.1.0",
     "tsserver-tracer-plugin": "file:plugin"
   }
 }

@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import fs from 'fs/promises';
+import open from '../built-esm/open';
 
 const tmpPrefix = '/tmp/tsserver-tracer-plugin-';
 
@@ -88,7 +89,6 @@ export async function activate(context: vscode.ExtensionContext) {
 
       if (result) {
         vscode.window.showInformationMessage('Trace stopped');
-        const { default: open } = await import('open');
         open(traceDir!);
         traceDir = undefined;
       } else {
