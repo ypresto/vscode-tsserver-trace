@@ -1,12 +1,18 @@
 {
-  "name": "vscode-tsserver-tracer",
-  "displayName": "tsserver tracer",
-  "description": "Take a trace of the TypeScript server without restarting it.",
+  "name": "vscode-tsserver-trace",
+  "displayName": "TS Sever Trace",
+  "description": "Take a trace (--generateTrace) of a running TypeScript server (tsserver) instance used by vscode, without restarting it.",
   "version": "0.0.1",
+  "publisher": "ypresto",
+  "keywords": [
+    "tsserver",
+    "trace",
+    "generateTrace"
+  ],
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ypresto/vscode-tsserver-tracer.git"
+    "url": "https://github.com/ypresto/vscode-tsserver-trace.git"
   },
   "engines": {
     "vscode": "^1.88.0"
@@ -36,6 +42,7 @@
   },
   "scripts": {
     "vscode:prepublish": "npm run compile && cd plugin && npm run build",
+    "package": "vsce package",
     "compile": "node scripts/bundle-esm.js && tsc -p ./",
     "watch": "tsc -watch -p ./",
     "pretest": "npm run compile && npm run lint",

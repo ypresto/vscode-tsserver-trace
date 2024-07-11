@@ -1,34 +1,27 @@
 # vscode-tsserver-tracer README
 
-## Features
+Take a trace (`--generateTrace`) of a **running** TypeScript server (tsserver) instance used by vscode, **without restarting it**.
+This trace is useful for debugging performance issues related to the editing experience, such as lags in completion and diagnostics.
 
-Take a trace of the TypeScript server instance used by vscode, **without restarting it**.
-It is useful for debugging performance issue of editing experience.
+## Usage
 
-Available commands are:
+1. Run `TypeScript: Start tracing in tsserver` from command palette.
+2. Once started, reproduce the operation that has performance issues. For example you insert a character in a heavy file.
+3. Wait for a while until the tsserver becomes idle. You can wait for syntax errors to appear as diagnostics.
+4. Run `TypeScript: Stop tracing in tsserver` from command palette.
+5. Automatically opens a directory with `trace.json` and `types.json`.
+6. Go to [https://ui.perfetto.dev/].
+7. Click `Open trace file` then upload `trace.json`.
 
-- TypeScript: Start tracing in tsserver
-- TypeScript: Stop tracing in tsserver
-
-## Requirements
-
-TypeScript feature is enabled in vscode.
-
-## Extension Settings
-
-Currently no config.
+See below URL for more details for analyzing trace files.
+[https://github.com/microsoft/TypeScript-wiki/blob/main/Performance-Tracing.md]
 
 ## Known Issues
+
+- **Vue extension**: Hybrid Mode will be automatically disabled (because this plugin installs tsserver plugin). You should re-enable it by change `Vue › Server: Hybrid Mode` setting from `auto` to `true`.
 
 ## Release Notes
 
 ### 0.0.1
 
 Initial release
-
-## TODO
-
-- Some nice UI to show profiling is in progress.
-- Automatically open [perfetto](https://ui.perfetto.dev/). This requires http server.
-- Fill trace.json with type information retrieved from types.json .
-- Instant trace does not show up in non-legacy perfetto UI. Convert it somehow.
